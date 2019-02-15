@@ -1,0 +1,45 @@
+version: '3'
+services:
+  api-php-fpm:
+    user: www-data
+    build:
+      context: docker/php-fpm
+      args:
+        - UID=${UID}
+    volumes:
+      - ./:/var/www
+    environment:
+      XDEBUG_CONFIG: "remote_host=192.168.220.1 remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    networks:
+      - internal
+  api-nginx:
+    build:
+      context: docker/nginx
+    volumes:
+      - ./:/var/www
+    ports:
+      - "${API_NGINX_PORT}:80"
+    depends_on:
+      - api-php-fpm
+    networks:
+      - internal
+  api-postgres:
+    image: postgres:9.6-alpine
+    volumes:
+      - ./var/docker/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${API_POSTGRES_DB}
+      - POSTGRES_USER=${API_POSTGRES_USER}
+      - POSTGRES_PASSWORD=${API_POSTGRES_PASSWORD}
+    ports:
+      - "${API_POSTGRES_PORT}:5432"
+    networks:
+      - internal
+networks:
+  internal:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: ${API_INTERNAL_NETWORK_SUBNET}
