@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Api\Infrastructure\Doctrine\Type;
 use Doctrine\Common\Cache\FilesystemCache;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
@@ -24,8 +24,8 @@ return [
         );
 
         foreach ($params['types'] as $type => $class) {
-            if (!Type::hasType($type)) {
-                Type::addType($type, $class);
+            if (!Doctrine\DBAL\Types\Type::hasType($type)) {
+                Doctrine\DBAL\Types\Type::addType($type, $class);
             }
         }
 
@@ -40,13 +40,17 @@ return [
             'dev_mode' => false,
             'cache_dir' => 'var/cache/doctrine',
             'metadata_dirs' => [
-                // paths to entities
+                'src/Model/OAuth/Entity',
+                'src/Model/User/Entity',
             ],
             'connection' => [
                 'url' => getenv('API_DB_URL'),
             ],
             'types' => [
-
+                Type\OAuth\ClientType::NAME => Type\OAuth\ClientType::class,
+                Type\OAuth\ScopesType::NAME => Type\OAuth\ScopesType::class,
+                Type\User\EmailType::NAME => Type\User\EmailType::class,
+                Type\User\UserIdType::NAME => Type\User\UserIdType::class,
             ],
         ],
     ],
