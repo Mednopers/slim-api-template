@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Api\Http\Action;
 use Api\Http\Middleware;
 use Api\Http\Validator\Validator;
+use Api\Model;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Validator\Validation;
@@ -41,6 +42,13 @@ return [
         $params = $container['config']['app'];
 
         return new Action\HomeAction($params['name'], $params['version']);
+    },
+
+    Action\Auth\SignUp\RequestAction::class => function (ContainerInterface $container) {
+        return new Action\Auth\SignUp\RequestAction(
+            $container->get(Model\User\UseCase\SignUp\Request\Handler::class),
+            $container->get(Validator::class)
+        );
     },
 
     Action\Auth\OAuthAction::class => function (ContainerInterface $container) {

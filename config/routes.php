@@ -19,5 +19,7 @@ return function (App $app, ContainerInterface $container) {
 
     $app->get('/', Action\HomeAction::class . ':handle');
 
+    $app->post('/auth/signup', Action\Auth\SignUp\RequestAction::class . ':handle');
+
     $app->post('/oauth/auth', Action\Auth\OAuthAction::class . ':handle');
 };
