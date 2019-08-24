@@ -1,5 +1,9 @@
 up: docker-up
 
+stop: docker-stop
+
+down: docker-down
+
 init: api-env docker-clear docker-up api-composer api-genrsa api-migration api-docs api-test-keys api-test
 
 docker-clear:
@@ -8,6 +12,12 @@ docker-clear:
 
 docker-up:
 	docker-compose up --build -d
+
+docker-stop:
+	docker-compose stop
+
+docker-down:
+	docker-compose down
 
 pause:
 	sleep 5
