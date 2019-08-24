@@ -8,3 +8,4 @@
 /public.key
 /tests/data/private.key
 /tests/data/public.key
+/public/swagger/openapi.json

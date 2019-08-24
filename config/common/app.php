@@ -37,8 +37,10 @@ return [
         return new Middleware\ValidationExceptionMiddleware();
     },
 
-    Action\HomeAction::class => function () {
-        return new Action\HomeAction();
+    Action\HomeAction::class => function (ContainerInterface $container) {
+        $params = $container['config']['app'];
+
+        return new Action\HomeAction($params['name'], $params['version']);
     },
 
     Action\Auth\OAuthAction::class => function (ContainerInterface $container) {
@@ -47,4 +49,13 @@ return [
             $container->get(\Psr\Log\LoggerInterface::class)
         );
     },
+
+    'config' => [
+        'app' => [
+            'name' => getenv('APP_NAME'),
+            'version' => getenv('APP_VERSION'),
+            'host' => getenv('APP_HOST'),
+            'support_email' => getenv('APP_SUPPORT_EMAIL'),
+        ],
+    ],
 ];

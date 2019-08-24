@@ -15,9 +15,7 @@ class HomeTest extends WebTestCase
 
         $data = json_decode($content, true);
 
-        self::assertEquals([
-            'name' => 'App API',
-            'version' => '1.0',
-        ], $data);
+        self::assertArrayHasKey('name', $data);
+        self::assertArrayHasKey('version', $data);
     }
 }

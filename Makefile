@@ -1,6 +1,6 @@
 up: docker-up
 
-init: api-env docker-clear docker-up api-composer api-genrsa pause api-test
+init: api-env docker-clear docker-up api-composer api-genrsa api-migration api-docs api-test-keys api-test
 
 docker-clear:
 	docker-compose down --remove-orphans
@@ -29,5 +29,14 @@ api-migration:
 api-fixtures:
 	docker-compose exec api-php-fpm composer app fixtures:load
 
+api-test-keys:
+	rm -f tests/data/private.key
+	rm -f tests/data/public.key
+	ln -sr private.key tests/data/private.key
+	ln -sr public.key tests/data/public.key
+
 api-test:
 	docker-compose exec api-php-fpm composer test
+
+api-docs:
+	docker-compose exec api-php-fpm composer docs
